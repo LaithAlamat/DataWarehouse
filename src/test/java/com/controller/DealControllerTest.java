@@ -35,18 +35,6 @@ public class DealControllerTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    public void testAddDeal_Success() {
-//        DealDTO dealDTO = new DealDTO();
-//        ArgumentCaptor<Deal> dealCaptor = ArgumentCaptor.forClass(Deal.class);
-//        ResponseEntity<String> response = dealController.addDeal(dealDTO);
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals("Deal saved successfully", response.getBody());
-//        verify(dealValidator, times(1)).isValidCurrencyISOCode(dealDTO);
-//        verify(dealsAdapter, times(1)).map(dealDTO);
-//        verify(dealService, times(1)).saveDeal(dealCaptor.capture());
-//        assertNotNull(dealCaptor.getValue());
-//    }
 
     @Test
     public void testAddDeal_DuplicateDealException() {
