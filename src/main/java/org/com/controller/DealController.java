@@ -13,15 +13,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @RestController
 @RequestMapping("/v1/deals")
 @AllArgsConstructor
 public class DealController {
 
-    private DealService dealService;
-    private DealValidator dealValidator;
-    private DealsAdapter dealsAdapter;
+    private static final Logger logger = LogManager.getLogger(DealController.class);
+
+    private final DealService dealService;
+    private final DealValidator dealValidator;
+    private final DealsAdapter dealsAdapter;
 
     @PostMapping("/add")
     public ResponseEntity<String> addDeal(@RequestBody DealDTO dealDTO) {
@@ -29,9 +33,16 @@ public class DealController {
             dealValidator.isValidCurrencyISOCode(dealDTO);
             Deal deal = dealsAdapter.map(dealDTO);
             dealService.saveDeal(deal);
+            logger.info("Deal saved successfully");
             return ResponseEntity.ok("Deal saved successfully");
         } catch (DuplicateDealException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            String errorMessage = "Failed to save deal: " + e.getMessage();
+            logger.error(errorMessage, e);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
+        } catch (Exception e) {
+            String errorMessage = "Unexpected error occurred: " + e.getMessage();
+            logger.error(errorMessage, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
         }
     }
 }

@@ -9,8 +9,9 @@ import java.util.Currency;
 @Component
 @AllArgsConstructor
 public class DealValidator {
-    public void isValidCurrencyISOCode(DealDTO dealDTO) {
+    public boolean isValidCurrencyISOCode(DealDTO dealDTO) {
         Currency.getInstance(dealDTO.getFromCurrencyISOCode());
         Currency.getInstance(dealDTO.getToCurrencyISOCode());
+        return true;
     }
 }
